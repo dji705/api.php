@@ -18,9 +18,9 @@ async function translateToHebrew(value) {
   const text = clean(value);
   if (!text) return "";
   // Keep short names/identifiers as published; translate descriptions and labels.
-  const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=he&dt=t&q=" + encodeURIComponent(text.slice(0, 3500));
+  const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=he&dt=t&q=" + encodeURIComponent(text.slice(0, 500));
   try {
-    const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+    const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(3500) });
     if (!response.ok) return text;
     const data = await response.json();
     const translated = Array.isArray(data?.[0]) ? data[0].map(part => part?.[0] || "").join("") : "";
@@ -51,7 +51,7 @@ async function getFbi(params) {
   if (params.field_offices) url.searchParams.set("field_offices", params.field_offices);
   if (params.sort_on) url.searchParams.set("sort_on", params.sort_on);
   if (params.sort_order) url.searchParams.set("sort_order", params.sort_order);
-  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" } });
+  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" }, signal: AbortSignal.timeout(7000) });
   if (!response.ok) throw new Error("FBI API returned " + response.status);
   return response.json();
 }
@@ -68,8 +68,9 @@ async function describeItem(item, index) {
   const reward = clean(item.reward_text);
   const status = clean(item.status);
   const translatedDesc = desc ? await translateToHebrew(desc) : "";
-  const translatedReward = reward ? await translateToHebrew(reward) : "";
-  const translatedStatus = status ? await translateToHebrew(status) : "";
+  // Avoid extra translation requests: these can delay the IVR response and disconnect the call.
+  const translatedReward = reward;
+  const translatedStatus = status;
   const parts = [`מספר ${index}. ${title}.`];
   if (translatedDesc) parts.push("פרטים: " + translatedDesc + ".");
   if (translatedReward) parts.push(translatedReward + ".");
@@ -110,14 +111,15 @@ export default async function handler(req, res) {
     let data;
     if (key === "2") {
       data = await getFbi({ page: 1, sort_on: "title", sort_order: "asc" });
-      const items = (data.items || []).filter(item => /ten most wanted/i.test([item.title, ...(item.subjects || [])].join(" "))).slice(0, 10);
-      const chosen = items.length ? items : (data.items || []).slice(0, 10);
+      const items = (data.items || []).filter(item => /ten most wanted/i.test([item.title, ...(item.subjects || [])].join(" "))).slice(0, 3);
+      const chosen = items.length ? items : (data.items || []).slice(0, 3);
       if (!chosen.length) {
         res.status(200).send(yemotRead("לא נמצאו רשומות."));
         return;
       }
       const output = [];
-      for (let i = 0; i < chosen.length; i++) output.push(await describeItem(chosen[i], i + 1));
+      const descriptions = await Promise.all(chosen.map((item, i) => describeItem(item, i + 1)));
+      output.push(...descriptions);
       res.status(200).send(yemotRead(output.join(" הבא. ")));
       return;
     }
@@ -140,16 +142,13 @@ export default async function handler(req, res) {
       return;
     }
 
-    const items = Array.isArray(data.items) ? data.items.slice(0, 5) : [];
+    const items = Array.isArray(data.items) ? data.items.slice(0, 3) : [];
     if (!items.length) {
       res.status(200).send(yemotRead("לא נמצאו מבוקשים בעמוד זה."));
       return;
     }
 
-    const output = [];
-    for (let i = 0; i < items.length; i++) {
-      output.push(await describeItem(items[i], i + 1));
-    }
+    const output = await Promise.all(items.map((item, i) => describeItem(item, i + 1)));
     output.push(`עמוד ${data.page || page}. נמצאו ${data.total || 0} רשומות בסך הכול.`);
     output.push("להמשך, הקישו 5.");
     res.status(200).send(yemotRead(output.join(" הבא. ")));
