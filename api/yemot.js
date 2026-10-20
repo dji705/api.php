@@ -67,7 +67,7 @@ async function describeItem(item, index) {
   const desc = nonEmpty(item.description || item.details || item.subjects);
   const reward = clean(item.reward_text);
   const status = clean(item.status);
-  const translatedDesc = desc ? await translateToHebrew(desc) : "";
+  const translatedDesc = desc ? clean(desc).slice(0, 120) : "";
   // Avoid extra translation requests: these can delay the IVR response and disconnect the call.
   const translatedReward = reward;
   const translatedStatus = status;
