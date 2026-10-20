@@ -51,7 +51,7 @@ async function getFbi(params) {
   if (params.field_offices) url.searchParams.set("field_offices", params.field_offices);
   if (params.sort_on) url.searchParams.set("sort_on", params.sort_on);
   if (params.sort_order) url.searchParams.set("sort_order", params.sort_order);
-  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" }, signal: AbortSignal.timeout(7000) });
+  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" }, signal: AbortSignal.timeout(2500) });
   if (!response.ok) throw new Error("FBI API returned " + response.status);
   return response.json();
 }
