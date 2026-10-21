@@ -32,11 +32,12 @@ async function translateToHebrew(value) {
 
 function yemotRead(text, digits = "Digits", maxDigits = 1) {
   const safe = String(text || "לא התקבל מידע")
-    .replace(/[\r\n]+/g, " ")
+    .replace(/[\\r\\n]+/g, " ")
     .replace(/[=]/g, " ")
-    .replace(/\s+/g, " ")
+    .replace(/\\s+/g, " ")
     .trim();
-  return `read=${safe}.n-123.t-${digits}=wm_nav,no,1,1,${maxDigits},Digits,no,no,,,1,Ok`;
+  // Use the exact Yemot output format requested.
+  return `read=${safe}.n-123.t-מטרים=wm_nav,no,1,1,5,Digits,no,no,,,1,Ok`;
 }
 
 function menu() {
