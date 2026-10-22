@@ -2,6 +2,9 @@
 // Translation uses Google's public web translation endpoint; it may be rate-limited
 // and is not an official or guaranteed translation API.
 const FBI_URL = "https://api.fbi.gov/wanted/v1/list";
+let cachedList = null;
+let cachedListAt = 0;
+const CACHE_MS = 5 * 60 * 1000;
 
 function clean(value) {
   return String(value ?? "")
@@ -32,9 +35,9 @@ async function translateToHebrew(value) {
 
 function yemotRead(text, digits = "Digits", maxDigits = 1) {
   const safe = String(text || "לא התקבל מידע")
-    .replace(/[\\r\\n]+/g, " ")
+    .replace(/[\r\n]+/g, " ")
     .replace(/[=]/g, " ")
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
   // Use the exact Yemot output format requested.
   return `read=${safe}.n-123.t-מטרים=wm_nav,no,1,1,5,Digits,no,no,,,1,Ok`;
@@ -45,6 +48,10 @@ function menu() {
 }
 
 async function getFbi(params) {
+  const cacheKey = JSON.stringify(params);
+  if (params.page === 1 && !params.title && !params.field_offices && cachedList && Date.now() - cachedListAt < CACHE_MS) {
+    return cachedList;
+  }
   const url = new URL(FBI_URL);
   url.searchParams.set("page", String(params.page || 1));
   url.searchParams.set("pageSize", "20");
@@ -52,9 +59,14 @@ async function getFbi(params) {
   if (params.field_offices) url.searchParams.set("field_offices", params.field_offices);
   if (params.sort_on) url.searchParams.set("sort_on", params.sort_on);
   if (params.sort_order) url.searchParams.set("sort_order", params.sort_order);
-  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" }, signal: AbortSignal.timeout(2500) });
+  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" }, signal: AbortSignal.timeout(1500) });
   if (!response.ok) throw new Error("FBI API returned " + response.status);
-  return response.json();
+  const data = await response.json();
+  if (params.page === 1 && !params.title && !params.field_offices) {
+    cachedList = data;
+    cachedListAt = Date.now();
+  }
+  return data;
 }
 
 function nonEmpty(value) {
@@ -65,19 +77,8 @@ function nonEmpty(value) {
 
 async function describeItem(item, index) {
   const title = clean(item.title) || "שם לא ידוע";
-  const desc = nonEmpty(item.description || item.details || item.subjects);
-  const reward = clean(item.reward_text);
-  const status = clean(item.status);
-  const translatedDesc = desc ? clean(desc).slice(0, 120) : "";
-  // Avoid extra translation requests: these can delay the IVR response and disconnect the call.
-  const translatedReward = reward;
-  const translatedStatus = status;
-  const parts = [`מספר ${index}. ${title}.`];
-  if (translatedDesc) parts.push("פרטים: " + translatedDesc + ".");
-  if (translatedReward) parts.push(translatedReward + ".");
-  if (translatedStatus) parts.push("סטטוס: " + translatedStatus + ".");
-  parts.push("לפרטים נוספים באתר האף בי איי.");
-  return parts.join(" ");
+  // Keep the IVR response short and fast: long descriptions can cause call timeouts.
+  return `מבוקש מספר ${index}: ${title}. לפרטים נוספים, באתר האף בי איי.`;
 }
 
 export default async function handler(req, res) {
@@ -112,8 +113,8 @@ export default async function handler(req, res) {
     let data;
     if (key === "2") {
       data = await getFbi({ page: 1, sort_on: "title", sort_order: "asc" });
-      const items = (data.items || []).filter(item => /ten most wanted/i.test([item.title, ...(item.subjects || [])].join(" "))).slice(0, 3);
-      const chosen = items.length ? items : (data.items || []).slice(0, 3);
+      const items = (data.items || []).filter(item => /ten most wanted/i.test([item.title, ...(item.subjects || [])].join(" "))).slice(0, 1);
+      const chosen = items.length ? items : (data.items || []).slice(0, 1);
       if (!chosen.length) {
         res.status(200).send(yemotRead("לא נמצאו רשומות."));
         return;
@@ -143,14 +144,13 @@ export default async function handler(req, res) {
       return;
     }
 
-    const items = Array.isArray(data.items) ? data.items.slice(0, 3) : [];
+    const items = Array.isArray(data.items) ? data.items.slice(0, 1) : [];
     if (!items.length) {
       res.status(200).send(yemotRead("לא נמצאו מבוקשים בעמוד זה."));
       return;
     }
 
     const output = await Promise.all(items.map((item, i) => describeItem(item, i + 1)));
-    output.push(`עמוד ${data.page || page}. נמצאו ${data.total || 0} רשומות בסך הכול.`);
     output.push("להמשך, הקישו 5.");
     res.status(200).send(yemotRead(output.join(" הבא. ")));
   } catch (error) {
