@@ -90,7 +90,7 @@ export default async function handler(req, res) {
   }
 
   const q = req.query || {};
-  const key = String(q.choice ?? q.Digits ?? q.digits ?? q.key ?? "");
+  const key = String(q["מטרים"] ?? q.choice ?? q.Digits ?? q.digits ?? q.key ?? "");
   const page = Math.max(1, Math.min(100, Number.parseInt(q.page || "1", 10) || 1));
   const searchName = clean(q.name || q.title || "");
 
