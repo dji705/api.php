@@ -40,7 +40,7 @@ function yemotRead(text, digits = "Digits", maxDigits = 1) {
     .replace(/\s+/g, " ")
     .trim();
   // Use the exact Yemot output format requested.
-  return `read=${safe}.n-123.t-מטרים=wm_nav,no,1,1,5,Digits,no,no,,,1,Ok`;
+  return `read=${safe}.n-123.t-מטרים=choice,no,1,1,5,Digits,no,no,,,1,Ok`;
 }
 
 function menu() {
@@ -59,7 +59,7 @@ async function getFbi(params) {
   if (params.field_offices) url.searchParams.set("field_offices", params.field_offices);
   if (params.sort_on) url.searchParams.set("sort_on", params.sort_on);
   if (params.sort_order) url.searchParams.set("sort_order", params.sort_order);
-  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" }, signal: AbortSignal.timeout(1500) });
+  const response = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "Yemot-FBI-Wanted/1.0" }, signal: AbortSignal.timeout(5000) });
   if (!response.ok) throw new Error("FBI API returned " + response.status);
   const data = await response.json();
   if (params.page === 1 && !params.title && !params.field_offices) {
@@ -90,7 +90,7 @@ export default async function handler(req, res) {
   }
 
   const q = req.query || {};
-  const key = String(q.wm_nav ?? q["מטרים"] ?? q.choice ?? q.Digits ?? q.digits ?? q.key ?? "");
+  const rawKey = q.choice ?? q.wm_nav ?? q["מטרים"] ?? q.Digits ?? q.digits ?? q.key ?? "";\n  const key = String(Array.isArray(rawKey) ? rawKey[rawKey.length - 1] : rawKey).trim();
   const page = Math.max(1, Math.min(100, Number.parseInt(q.page || "1", 10) || 1));
   const searchName = clean(q.name || q.title || "");
 
