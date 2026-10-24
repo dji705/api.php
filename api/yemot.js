@@ -40,7 +40,7 @@ function yemotRead(text, digits = "Digits", maxDigits = 1) {
     .replace(/\s+/g, " ")
     .trim();
   // Use the exact Yemot output format requested.
-  return `read=${safe}.n-123.t-מטרים=wm_nav,no,1,1,5,Digits,no,no,,,1,Ok`;
+  return `read=t-${safe}=wm_nav,no,1,1,5,Digits,no,no,,,1,Ok`;
 }
 
 function menu() {
