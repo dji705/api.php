@@ -40,7 +40,7 @@ function yemotRead(text, digits = "Digits", maxDigits = 1) {
     .replace(/\s+/g, " ")
     .trim();
   // Use the exact Yemot output format requested.
-  return `read=${safe}.n-123.t-מטרים=choice,no,1,1,5,Digits,no,no,,,1,Ok`;
+  return `read=${safe}.n-123.t-מטרים=wm_nav,no,1,1,5,Digits,no,no,,,1,Ok`;
 }
 
 function menu() {
@@ -90,7 +90,8 @@ export default async function handler(req, res) {
   }
 
   const q = req.query || {};
-  const rawKey = q.choice ?? q.wm_nav ?? q["מטרים"] ?? q.Digits ?? q.digits ?? q.key ?? "";\n  const key = String(Array.isArray(rawKey) ? rawKey[rawKey.length - 1] : rawKey).trim();
+  const rawKey = q.choice ?? q.wm_nav ?? q["מטרים"] ?? q.Digits ?? q.digits ?? q.key ?? "";
+  const key = String(Array.isArray(rawKey) ? rawKey[rawKey.length - 1] : rawKey).trim();
   const page = Math.max(1, Math.min(100, Number.parseInt(q.page || "1", 10) || 1));
   const searchName = clean(q.name || q.title || "");
 
