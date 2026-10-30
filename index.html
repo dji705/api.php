@@ -1,81 +1,31 @@
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080d18">
-<title>FBI Wanted API — מסוף בדיקה</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220"><title>FBI Wanted — הגדרות ימות המשיח</title>
 <style>
-:root{color-scheme:dark;--bg:#080d18;--panel:#101827;--line:#243349;--muted:#8ea2bd;--text:#edf4ff;--green:#52f0ae;--blue:#7aa9ff;--red:#ff7e88}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#132849 0,transparent 36%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100vh}
-.wrap{max-width:1180px;margin:auto;padding:30px 20px 56px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:13px}.logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#316de8,#6c49ce);font-weight:900;font-size:20px;box-shadow:0 8px 30px #2353a344}.eyebrow{color:var(--green);font-size:11px;letter-spacing:2px;font-weight:800}.brand h1{font-size:22px;margin:3px 0 0}.pill{border:1px solid #245c4b;background:#0d2b25;color:var(--green);border-radius:999px;padding:8px 12px;font-size:12px;white-space:nowrap}
-.hero{margin-bottom:25px}.hero h2{font-size:clamp(25px,4vw,39px);letter-spacing:-1px;margin:0 0 10px}.hero p{color:var(--muted);margin:0;line-height:1.8;max-width:720px}
-.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(290px,.85fr);gap:18px}.card{background:linear-gradient(160deg,#121d2d,#0e1624);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 16px 50px #0002}.cardhead{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.cardhead h3{margin:0;font-size:15px}.sub{font-size:12px;color:var(--muted)}.body{padding:20px}
-label{display:block;font-size:12px;color:#b8c8dd;margin:0 0 8px}input{width:100%;background:#080f1b;border:1px solid #2a3b52;border-radius:10px;padding:12px 13px;color:var(--text);font:13px ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #7aa9ff19}.field{margin-bottom:16px}.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.btn{border:1px solid #2b3d56;background:#172438;color:var(--text);border-radius:10px;padding:12px 11px;cursor:pointer;font-weight:700;font-size:13px;transition:.15s}.btn:hover{border-color:var(--blue);transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,#316de8,#4b55ce);border-color:transparent}.btn:disabled{opacity:.55;cursor:wait;transform:none}.tip{font-size:12px;color:var(--muted);line-height:1.8;margin-top:16px}
-.terminal{background:#070c13;border:1px solid #26364b;border-radius:12px;overflow:hidden}.termbar{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#101927;border-bottom:1px solid #26364b}.dots{display:flex;gap:6px}.dot{width:8px;height:8px;border-radius:50%;background:#fa6d73}.dot:nth-child(2){background:#f5c15b}.dot:nth-child(3){background:#56d99b}.termname{font:11px ui-monospace,monospace;color:#91a7c4;direction:ltr}.termcontent{padding:15px;min-height:275px;max-height:470px;overflow:auto;direction:ltr;text-align:left;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;color:#c6d5e8}.prompt{color:var(--green)}.muted{color:#7f94b0}.good{color:var(--green)}.bad{color:var(--red)}.resulthead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.tag{font-size:11px;border:1px solid #29415a;border-radius:6px;padding:4px 7px;color:#a9c4e7}.tag.good{border-color:#225642}.tag.bad{border-color:#6b303a}.footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#7086a3;font-size:11px;margin-top:20px}.footer a{color:#91b7ff;text-decoration:none}.footer a:hover{text-decoration:underline}
-@media(max-width:780px){.grid{grid-template-columns:1fr}.wrap{padding:20px 13px 35px}.top{align-items:flex-start}.brand h1{font-size:18px}.pill{font-size:10px}.termcontent{min-height:220px}}
-</style>
-</head>
-<body>
-<div class="wrap">
-<header class="top"><div class="brand"><div class="logo">FBI</div><div><div class="eyebrow">API CONTROL CENTER</div><h1>מסוף בדיקה — FBI Wanted</h1></div></div><div class="pill">● סביבת בדיקה</div></header>
-<section class="hero"><h2>בדיקת API בזמן אמת</h2><p>בדוק את החיבור לשרת, הפעל פעולות לדוגמה וצפה בתשובת השרת הגולמית בפורמט של ימות המשיח. הבדיקות נשלחות ל־API שהוגדר למטה.</p></section>
-<div class="grid">
-<section class="card"><div class="cardhead"><h3>הגדרות ובדיקות</h3><span class="sub">REQUEST BUILDER</span></div><div class="body">
-<div class="field"><label for="endpoint">כתובת נקודת הקצה (Endpoint)</label><input id="endpoint" dir="ltr" spellcheck="false" value="/api/yemot"></div>
-<div class="field"><label for="name">שם לחיפוש (רשות)</label><input id="name" placeholder="למשל: John Doe" dir="auto"></div>
-<div class="field"><label for="page">מספר עמוד</label><input id="page" type="number" min="1" max="100" value="1" dir="ltr"></div>
-<div class="actions">
-<button class="btn primary" data-choice="menu">בדיקת תפריט</button>
-<button class="btn" data-choice="1">1 · רשימת מבוקשים</button>
-<button class="btn" data-choice="2">2 · עשרת המבוקשים</button>
-<button class="btn" data-choice="3">3 · חיפוש לפי שם</button>
-<button class="btn" data-choice="5">5 · עמוד הבא</button>
-<button class="btn" id="clear">ניקוי מסוף</button>
-</div>
-<div class="tip">הבדיקה מציגה את התשובה כפי שהשרת מחזיר אותה. חיפוש לפי שם משתמש בשדה החיפוש. אם הבקשה נכשלת, בדוק שהכתובת נכונה ושהפריסה ב־Vercel הושלמה.</div>
-</div></section>
-<section class="card"><div class="cardhead"><h3>פלט מסוף</h3><span class="sub" id="state">ממתין לפקודה</span></div><div class="body"><div class="resulthead"><span class="tag" id="http">HTTP —</span><span class="tag" id="duration">0 ms</span><span class="tag" id="size">0 B</span></div><div class="terminal"><div class="termbar"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="termname">response.log</span></div><div class="termcontent" id="output"><span class="muted">FBI Wanted API Test Console v1.0
-────────────────────────────────────
-מוכן לבדיקה.
-
-בחר פעולה בצד שמאל כדי לשלוח בקשה.
-התגובה תופיע כאן לאחר קבלת המענה.</span></div></div></div></section>
-</div>
-<footer class="footer"><span>FBI Wanted API · Yemot HaMashiach response tester</span><span><a href="https://github.com/dji705/api.php" target="_blank" rel="noreferrer">קוד המקור ב־GitHub ↗</a>　·　<a href="https://api.fbi.gov/wanted/v1/list" target="_blank" rel="noreferrer">FBI public API ↗</a></span></footer>
-</div>
-<script>
-const $=id=>document.getElementById(id);
-const output=$('output'), state=$('state'), http=$('http'), duration=$('duration'), size=$('size');
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-async function test(choice){
- const endpoint=$('endpoint').value.trim();
- if(!endpoint){output.innerHTML='<span class="bad">שגיאה: יש להזין כתובת API.</span>';return;}
- const url=new URL(endpoint,location.href);
- if(choice==='menu') url.searchParams.set('choice','menu'); else url.searchParams.set('choice',choice);
- url.searchParams.set('page',String(Math.max(1,Math.min(100,parseInt($('page').value||'1',10)))));
- if(choice==='3'){
-   const name=$('name').value.trim();
-   if(!name){output.innerHTML='<span class="bad">נא להזין שם לחיפוש לפני הפעלת הבדיקה.</span>';return;}
-   url.searchParams.set('name',name);
- }
- const buttons=[...document.querySelectorAll('button[data-choice]')];buttons.forEach(b=>b.disabled=true);
- state.textContent='שולח בקשה…';http.textContent='HTTP …';http.className='tag';duration.textContent='…';size.textContent='…';
- output.innerHTML='<span class="prompt">$</span> GET '+esc(url.href)+'\n<span class="muted">ממתין לתשובת השרת…</span>';
- const start=performance.now();
- try{
-   const response=await fetch(url.href,{method:'GET',headers:{'Accept':'text/plain'}});
-   const text=await response.text();const ms=Math.round(performance.now()-start);
-   http.textContent='HTTP '+response.status;http.className='tag '+(response.ok?'good':'bad');
-   duration.textContent=ms+' ms';size.textContent=new Blob([text]).size+' B';
-   state.textContent=response.ok?'התקבלה תשובה':'השרת החזיר שגיאה';
-   output.innerHTML='<span class="prompt">$</span> GET '+esc(url.pathname+url.search)+'\n<span class="'+(response.ok?'good':'bad')+'">● '+(response.ok?'בקשה הושלמה':'בקשה נכשלה')+'</span> <span class="muted">('+ms+' ms)</span>\n\n<span class="muted">--- גוף התשובה ---</span>\n'+esc(text)+'\n\n<span class="muted">--- סוף התשובה ---</span>';
- }catch(err){
-   const ms=Math.round(performance.now()-start);http.textContent='NETWORK ERROR';http.className='tag bad';duration.textContent=ms+' ms';size.textContent='—';state.textContent='הבקשה נכשלה';
-   output.innerHTML='<span class="prompt">$</span> GET '+esc(url.href)+'\n<span class="bad">● שגיאת רשת / CORS</span>\n\n'+esc(err.message)+'\n\nבדוק את כתובת ה־API ואת סטטוס הפריסה.';
- }finally{buttons.forEach(b=>b.disabled=false);}
-}
-document.querySelectorAll('button[data-choice]').forEach(b=>b.addEventListener('click',()=>test(b.dataset.choice)));
-$('clear').addEventListener('click',()=>{output.textContent='המסוף נוקה. בחר פעולה כדי להתחיל בדיקה.';state.textContent='ממתין לפקודה';http.textContent='HTTP —';http.className='tag';duration.textContent='0 ms';size.textContent='0 B';});
-</script>
-</body></html>
+:root{color-scheme:dark;--bg:#0b1220;--card:#131f31;--line:#2b3d56;--text:#edf4ff;--muted:#9db0c9;--accent:#76a8ff;--green:#52e0aa}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#18345a,transparent 42%),var(--bg);color:var(--text);font-family:Arial,system-ui,sans-serif;line-height:1.7}.wrap{max-width:980px;margin:auto;padding:30px 18px 60px}header{margin-bottom:28px}.tag{color:var(--green);font-size:12px;font-weight:bold;letter-spacing:1.5px}h1{font-size:clamp(26px,5vw,40px);margin:5px 0}header p,.desc{color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:15px 0}.card h2{font-size:20px;margin:0 0 5px}.endpoint{direction:ltr;text-align:left;color:var(--accent);font:13px monospace;overflow-wrap:anywhere}.config{direction:ltr;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;background:#080e18;border:1px solid #26364b;border-radius:10px;padding:14px;font:13px/1.8 monospace;color:#d7e5f7;margin:12px 0}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.copy{border:1px solid #45658d;background:#1a2c45;color:white;border-radius:8px;padding:8px 13px;cursor:pointer}.copy:hover{border-color:var(--accent)}.num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#24436d;color:#fff;margin-left:7px;font-weight:bold}footer{color:#8296b1;font-size:12px;margin-top:25px}a{color:var(--accent)}
+</style></head><body><main class="wrap">
+<header><div class="tag">YEMOT HAMASHIACH · FBI WANTED</div><h1>הגדרת תתי השלוחות</h1><p>לכל פעולה יש כתובת API נפרדת. יש להעתיק את ההגדרה המתאימה לשלוחה או לתת־השלוחה בימות המשיח.</p></header>
+<section class="card"><h2>שלוחה ראשית — תפריט</h2><p class="desc">משמיעה את התפריט הראשי. משם ניתן להיכנס לפעולות השונות.</p><div class="endpoint">https://apiphp-one.vercel.app/api/menu</div><pre class="config" id="cfg-menu">type=api
+api_link=https://apiphp-one.vercel.app/api/menu
+api_url_post=no
+say_api_answer=yes</pre><button class="copy" data-copy="cfg-menu">העתקת הגדרה</button></section>
+<section class="card"><div class="row"><h2><span class="num">1</span>רשימת המבוקשים</h2></div><p class="desc">מחזירה את רשימת המבוקשים מה־FBI.</p><div class="endpoint">https://apiphp-one.vercel.app/api/list</div><pre class="config" id="cfg-list">type=api
+api_link=https://apiphp-one.vercel.app/api/list
+api_url_post=no
+say_api_answer=yes</pre><button class="copy" data-copy="cfg-list">העתקת הגדרה</button></section>
+<section class="card"><h2><span class="num">2</span>עשרת המבוקשים</h2><p class="desc">מחזירה את פריט עשרת המבוקשים הזמין במאגר ה־FBI.</p><div class="endpoint">https://apiphp-one.vercel.app/api/top10</div><pre class="config" id="cfg-top10">type=api
+api_link=https://apiphp-one.vercel.app/api/top10
+api_url_post=no
+say_api_answer=yes</pre><button class="copy" data-copy="cfg-top10">העתקת הגדרה</button></section>
+<section class="card"><h2><span class="num">3</span>חיפוש לפי שם</h2><p class="desc">המערכת מבקשת להקיש שם; לאחר ההקשה היא מעבירה את הטקסט לחיפוש.</p><div class="endpoint">https://apiphp-one.vercel.app/api/search</div><pre class="config" id="cfg-search">type=api
+api_link=https://apiphp-one.vercel.app/api/search
+api_url_post=no
+say_api_answer=yes</pre><button class="copy" data-copy="cfg-search">העתקת הגדרה</button></section>
+<section class="card"><h2><span class="num">5</span>עמוד הבא</h2><p class="desc">מעבירה לעמוד הבא ברשימת המבוקשים.</p><div class="endpoint">https://apiphp-one.vercel.app/api/next</div><pre class="config" id="cfg-next">type=api
+api_link=https://apiphp-one.vercel.app/api/next
+api_url_post=no
+say_api_answer=yes</pre><button class="copy" data-copy="cfg-next">העתקת הגדרה</button></section>
+<footer>שרת API: apiphp-one.vercel.app · קוד מקור: <a href="https://github.com/dji705/api.php">GitHub</a></footer>
+</main><script>document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{const text=document.getElementById(b.dataset.copy).textContent;try{await navigator.clipboard.writeText(text);b.textContent='הועתק ✓';setTimeout(()=>b.textContent='העתקת הגדרה',1500)}catch{b.textContent='לא ניתן להעתיק';}}));</script></body></html>
