@@ -36,7 +36,7 @@ async function translateToHebrew(value) {
 function yemotRead(text, digits = "Digits", maxDigits = 1) {
   const safe = String(text || "לא התקבל מידע")
     .replace(/[\r\n]+/g, " ")
-    .replace(/[=]/g, " ")
+    .replace(/[=.]/g, ",")
     .replace(/\s+/g, " ")
     .trim();
   // Use the exact Yemot output format requested.
