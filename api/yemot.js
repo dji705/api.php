@@ -36,14 +36,20 @@ async function translateToHebrew(value) {
 function yemotRead(text, digits = "Digits", maxDigits = 1) {
   const safe = String(text || "לא התקבל מידע")
     .replace(/[\r\n]+/g, " ")
-    .replace(/[=.]/g, ",")
+    // Yemot splits speech on dots and hyphens, so neither may appear in TTS text.
+    .replace(/[=.\-]/g, ",")
     .replace(/\s+/g, " ")
     .trim();
 
-  // Yemot read format: variable,,min,max,Digits,yes
-  // Capture one menu key and send it back as the "choice" query parameter.
+  // Follow the proven CHOICE input layout used by Bechirot-26:
+  // CHOICE,,min,max,waitSeconds,playback,allowEmpty,blockAsterisk,,allowedKeys...
   const max = Math.max(1, Math.min(40, Number(maxDigits) || 1));
-  return `read=t-${safe}=choice,,1,${max},Digits,yes`;
+  const isMenuKey = max === 1;
+  const allowedKeys = isMenuKey ? "01235*" : "";
+  const inputConfig = isMenuKey
+    ? `CHOICE,,1,1,8,NO,yes,no,,${allowedKeys},,,,,no`
+    : `CHOICE,,1,${max},8,NO,yes,no,,,,,,,no`;
+  return `read=t-${safe}=${inputConfig}`;
 }
 
 function menu() {
@@ -93,7 +99,9 @@ export default async function handler(req, res) {
   }
 
   const q = req.query || {};
-  const rawKey = q.choice ?? q.wm_nav ?? q["מטרים"] ?? q.Digits ?? q.digits ?? q.key ?? "";
+  // Bechirot-26 uses the uppercase CHOICE variable in its read response.
+  // Keep lowercase and legacy aliases for compatibility with older Yemot configurations.
+  const rawKey = q.CHOICE ?? q.choice ?? q.wm_nav ?? q["מטרים"] ?? q.Digits ?? q.digits ?? q.key ?? "";
   const key = String(Array.isArray(rawKey) ? rawKey[rawKey.length - 1] : rawKey).trim();
   const page = Math.max(1, Math.min(100, Number.parseInt(q.page || "1", 10) || 1));
   const searchName = clean(q.name || q.title || "");
