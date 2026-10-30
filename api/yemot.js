@@ -39,8 +39,11 @@ function yemotRead(text, digits = "Digits", maxDigits = 1) {
     .replace(/[=.]/g, ",")
     .replace(/\s+/g, " ")
     .trim();
-  // Use the exact Yemot output format requested.
-  return `read=t-${safe}=wm_nav,no,1,1,5,Digits,no,no,,,1,Ok`;
+
+  // Yemot read format: variable,,min,max,Digits,yes
+  // Capture one menu key and send it back as the "choice" query parameter.
+  const max = Math.max(1, Math.min(40, Number(maxDigits) || 1));
+  return `read=t-${safe}=choice,,1,${max},Digits,yes`;
 }
 
 function menu() {
