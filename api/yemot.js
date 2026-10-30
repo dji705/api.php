@@ -98,11 +98,27 @@ export default async function handler(req, res) {
     return;
   }
 
-  const q = req.query || {};
-  // Bechirot-26 uses the uppercase CHOICE variable in its read response.
-  // Keep lowercase and legacy aliases for compatibility with older Yemot configurations.
-  const rawKey = q.CHOICE ?? q.choice ?? q.wm_nav ?? q["מטרים"] ?? q.Digits ?? q.digits ?? q.key ?? "";
+  // Parse the raw request URL exactly like the working Bechirot-26 example.
+  const requestUrl = new URL(req.url, "https://example.invalid");
+  const q = Object.fromEntries(requestUrl.searchParams.entries());
+  const fallback = req.query || {};
+  const rawKey =
+    requestUrl.searchParams.get("CHOICE") ??
+    requestUrl.searchParams.get("choice") ??
+    requestUrl.searchParams.get("wm_nav") ??
+    requestUrl.searchParams.get("מטרים") ??
+    requestUrl.searchParams.get("Digits") ??
+    requestUrl.searchParams.get("digits") ??
+    requestUrl.searchParams.get("key") ??
+    fallback.CHOICE ?? fallback.choice ?? fallback.wm_nav ??
+    fallback["מטרים"] ?? fallback.Digits ?? fallback.digits ?? fallback.key ?? "";
   const key = String(Array.isArray(rawKey) ? rawKey[rawKey.length - 1] : rawKey).trim();
+  console.log("YEMOT_INPUT", JSON.stringify({
+    method: req.method,
+    parameterNames: [...new Set([...requestUrl.searchParams.keys(), ...Object.keys(fallback)])],
+    choiceReceived: Boolean(key),
+    selectedKey: /^[0-9*]$/.test(key) ? key : "other"
+  }));
   const page = Math.max(1, Math.min(100, Number.parseInt(q.page || "1", 10) || 1));
   const searchName = clean(q.name || q.title || "");
 
